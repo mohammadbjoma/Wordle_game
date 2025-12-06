@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Wordle — لعبة كلمات</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- مرّر كلمة السيرفر هنا (مسموح كود Django بالـ HTML فقط) -->
+    <meta name="server-word" content="{% if server_word %}{{ server_word|upper }}{% endif %}">
+
+    <!-- استدعاء ملف JS الخارجي -->
+    <script src="{% static 'js/script.js' %}" defer></script>
+</head>
+
+<body>
+    <div class="app" role="application" aria-label="Wordle Arabic-style">
+        <header>
+            <h1>لعبة Wordle — تخمين كلمة من 5 حروف</h1>
+            <div class="footer">
+                لديك 6 محاولات. بعد كل محاولة سيُلوّن الحرف: أخضر مكان صحيح، أصفر
+                موجود لكن بمكان آخر، رمادي غير موجود.
+            </div>
+        </header>
+
+        <main>
+            <div id="board" class="board" aria-hidden="false"></div>
+            <div id="keyboard" class="keyboard" aria-hidden="false"></div>
+
+            <div style="display:flex;gap:12px;justify-content:center;margin-top:14px;">
+                <button id="btn-reset" class="key">إعادة</button>
+                <button id="btn-reveal" class="key">اظهر الكلمة</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast" class="toast" style="display:none"></div>
+</body>
+
+</html>
