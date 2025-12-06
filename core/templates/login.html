@@ -3,41 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <title>Wordle Login</title>
+
     {% load static %}
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <!-- Your Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style2.css' %}">
 </head>
 <body>
+    <style>
+                .focus-green:focus {
+    border-color: #aed334;
+    box-shadow: 0 0 0 0.2rem rgba(163, 211, 52, 0.25);
+    outline: none;
+}
+    </style>
 
-<div class="container">
-    <h1>Login</h1>
+<div class="container mt-5 p-4 shadow rounded" style="max-width: 450px; background: white;">
+    <h1 class="text-center mb-4">Login</h1>
 
     <form action="/login" method="POST">
         {% csrf_token %}
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Email" required>
+        <!-- EMAIL -->
+        <div class="form-group mb-3">
+            <label for="email" class="fw-bold">Email</label>
+            <input type="email" id="email" name="email" class="form-control  focus-green"
+                   placeholder="Email" required>
             {% if errors.email %}
                 <p class="error-text">{{ errors.email }}</p>
             {% endif %}
         </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Password" required>
+        <!-- PASSWORD -->
+        <div class="form-group mb-3">
+            <label for="password" class="fw-bold">Password</label>
+            <input type="password" id="password" name="password" class="form-control  focus-green"
+                   placeholder="Password" required>
             {% if errors.password %}
                 <p class="error-text">{{ errors.password }}</p>
             {% endif %}
         </div>
 
+        <!-- LOGIN ERROR -->
         {% if errors.login %}
             <p class="error-text">{{ errors.login }}</p>
         {% endif %}
 
-        <button class="btn btn-login" type="submit">Login</button>
+        <button class="btn btn-login w-100 mt-2" type="submit">Login</button>
     </form>
 
-    <p class="info-text" style="text-align: center; margin-top: 20px;">No account? <a href="/core/templates/register.html">Register</a></p>
+    <p class="info-text text-center mt-3">
+        No account? <a href="/register">Register</a>
+    </p>
 </div>
 
 </body>
