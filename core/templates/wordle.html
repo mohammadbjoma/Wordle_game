@@ -8,11 +8,7 @@
     <title>Wordle — لعبة كلمات</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
-
-    <!-- مرّر كلمة السيرفر هنا (مسموح كود Django بالـ HTML فقط) -->
     <meta name="server-word" content="{% if server_word %}{{ server_word|upper }}{% endif %}">
-
-    <!-- استدعاء ملف JS الخارجي -->
     <script src="{% static 'js/script.js' %}" defer></script>
 </head>
 

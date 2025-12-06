@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Room - Wordle Game</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Join Room</h1>
+        <form>
+            <div class="form-group">
+                <label for="room-code">Enter Room Code:</label>
+                <input type="text" id="room-code" name="room-code" placeholder="Enter room code" required>
+            </div>
+            <button type="submit" class="btn btn-join">Join Room</button>
+            <button type="button" class="btn btn-back" onclick="history.back()">Back</button>
+        </form>
+    </div>
+</body>
+</html>
