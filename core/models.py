@@ -100,7 +100,7 @@ class Room(models.Model):
         default="waiting"
     )
     game_state = models.JSONField(default=dict, blank=True)
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     
