@@ -3,6 +3,7 @@ from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.files.storage import default_storage
+import requests
 class UserManager(models.Manager):
 
     def user_validation(self,post_data):
@@ -83,17 +84,11 @@ class User(models.Model):
     updated_at=models.DateTimeField(auto_now=True)
     objects=UserManager()
     
-
-
-class Word(models.Model):
-    word =models.CharField(max_length=5)
-
-
-
 class Room(models.Model):
     code = models.CharField(max_length=6, unique=True, db_index=True)
     player1 = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="rooms_created")
     player2 = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="rooms_joined")
+    word = models.CharField(max_length=5, null=True, blank=True)  # to be populated from external API
     status = models.CharField(
         max_length=10,
         choices=[("waiting", "Waiting"), ("playing", "Playing"), ("finished", "Finished")],
@@ -102,5 +97,19 @@ class Room(models.Model):
     game_state = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # Fetch random word from API if not already set
+        if not self.word:
+            try:
+                response = requests.get('https://random-word-api.herokuapp.com/word?length=5', timeout=5)
+                if response.status_code == 200:
+                    word_list = response.json()
+                    if word_list and len(word_list) > 0:
+                        self.word = word_list[0].upper()
+            except:
+                self.word = "WORLD"
+        
+        super().save(*args, **kwargs)
 
     
