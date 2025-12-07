@@ -9,17 +9,20 @@ const MAX_ROWS = 6, COLS = 5;
 
 const boardEl = document.getElementById("board");
 const keyboardEl = document.getElementById("keyboard");
-const resultBox = document.getElementById("result-box");
 const toast = document.getElementById("toast");
 
 let grid = Array.from({ length: MAX_ROWS }, () => Array(COLS).fill(""));
 let row = 0, col = 0, isGameOver = false;
 
+/* --------------------------------------
+   2. BUILD BOARD + KEYBOARD
+--------------------------------------- */
 function buildBoard() {
   boardEl.innerHTML = "";
   for (let r = 0; r < MAX_ROWS; r++) {
     const rowEl = document.createElement("div");
     rowEl.className = "row";
+    if (r === 0) rowEl.classList.add("active");
     for (let c = 0; c < COLS; c++) {
       const tile = document.createElement("div");
       tile.className = "tile";
@@ -53,12 +56,18 @@ function buildKeyboard() {
   keyboardEl.appendChild(back);
 }
 
+/* --------------------------------------
+   3. TOAST
+--------------------------------------- */
 function toastShow(msg) {
   toast.innerText = msg;
   toast.style.display = "block";
-  setTimeout(() => toast.style.display = "none", 2000);
+  setTimeout(() => toast.style.display = "none", 1500);
 }
 
+/* --------------------------------------
+   4. TILE UPDATE
+--------------------------------------- */
 function updateTiles() {
   for (let r = 0; r < MAX_ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
@@ -67,7 +76,10 @@ function updateTiles() {
   }
 }
 
-function handleKey(key) {
+/* --------------------------------------
+   5. HANDLE KEY INPUT
+--------------------------------------- */
+async function handleKey(key) {
   if (isGameOver) return;
 
   if (key === "Backspace") {
@@ -80,7 +92,7 @@ function handleKey(key) {
   }
 
   if (key === "Enter") {
-    submitGuess();
+    await validatedSubmit();
     return;
   }
 
@@ -91,10 +103,43 @@ function handleKey(key) {
   }
 }
 
-function submitGuess() {
+/* --------------------------------------
+   6. API WORD VALIDATION
+--------------------------------------- */
+async function isValidWord(word) {
+  const apiUrl = "https://random-word-api.herokuapp.com/word?length=5&number=10000000";
+
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) throw new Error("API request failed");
+
+    const words = await response.json();
+    return words.includes(word.toLowerCase());
+
+  } catch (error) {
+    console.error("Error validating word:", error);
+    return false;
+  }
+}
+
+/* --------------------------------------
+   7. VALIDATED SUBMIT
+--------------------------------------- */
+async function validatedSubmit() {
   if (col < COLS) return toastShow("Word is incomplete");
 
-  const guess = grid[row].join("");
+  const guess = grid[row].join("").toLowerCase();
+
+  const valid = await isValidWord(guess);
+  if (!valid) return toastShow("Word not in dictionary!");
+
+  checkGuess(grid[row].join("")); // submit real guess
+}
+
+/* --------------------------------------
+   8. ORIGINAL WORDLE CHECK LOGIC
+--------------------------------------- */
+function checkGuess(guess) {
   const answerChars = ANSWER.split("");
   let status = Array(COLS).fill("absent");
   let taken = Array(COLS).fill(false);
@@ -123,10 +168,8 @@ function submitGuess() {
   }
 
   if (guess === ANSWER) {
+    toastShow(`🎉 You Win! ${ANSWER}`);
     isGameOver = true;
-    resultBox.className = "result-box win";
-    resultBox.innerHTML = `🎉 You Win! The word was: <b>${ANSWER}</b>`;
-    resultBox.style.display = "block";
     return;
   }
 
@@ -134,28 +177,29 @@ function submitGuess() {
   col = 0;
 
   if (row === MAX_ROWS) {
+    toastShow(`❌ You Lost! The word was: ${ANSWER}`);
     isGameOver = true;
-    resultBox.className = "result-box lose";
-    resultBox.innerHTML = `❌ You Lost! The word was: <b>${ANSWER}</b>`;
-    resultBox.style.display = "block";
   }
+
+  document.querySelectorAll(".row").forEach(r => r.classList.remove("active"));
+  if (!isGameOver) document.querySelectorAll(".row")[row].classList.add("active");
 }
 
+/* --------------------------------------
+   9. KEYBOARD & EVENTS
+--------------------------------------- */
 document.addEventListener("keydown", (e) => {
-  let key = e.key.toUpperCase();
   if (e.key === "Enter") handleKey("Enter");
   else if (e.key === "Backspace") handleKey("Backspace");
-  else if (key.match(/^[A-Z]$/)) handleKey(key);
+  else if (/^[a-zA-Z]$/.test(e.key)) handleKey(e.key.toUpperCase());
 });
 
 document.getElementById("btn-reset").onclick = () => location.reload();
 document.getElementById("btn-reveal").onclick = () => toastShow(`Word: ${ANSWER}`);
 
+/* --------------------------------------
+   10. INIT
+--------------------------------------- */
 buildBoard();
 buildKeyboard();
 updateTiles();
-
-
-
-
-
