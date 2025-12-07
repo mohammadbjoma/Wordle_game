@@ -99,7 +99,6 @@ class Room(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        # Fetch random word from API if not already set
         if not self.word:
             try:
                 response = requests.get('https://random-word-api.herokuapp.com/word?length=5', timeout=5)
