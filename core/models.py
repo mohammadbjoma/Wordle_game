@@ -2,7 +2,8 @@ from django.db import models
 from django.core.validators import EmailValidator
 from django.contrib.auth.hashers import make_password, check_password
 import requests
-
+import random
+import string
 
 class UserManager(models.Manager):
     def user_validation(self, post_data):
@@ -131,3 +132,38 @@ class Room(models.Model):
                 self.word = "WORLD"
 
         super().save(*args, **kwargs)
+
+
+def create_room(user_id):
+    user = User.objects.get(id=user_id)
+    
+    while True:
+        code = ''.join(random.choices(string.digits, k=6))
+        if not Room.objects.filter(code=code).exists():
+            break
+    
+    room = Room(code=code, player1=user)
+    room.save()
+    
+    return room
+
+
+def join_room(room_code, user_id):
+    room = Room.objects.get(code=room_code)
+    
+    if room.status != "waiting":
+        raise ValueError("Room is not available for joining")
+    
+    if room.player2 is not None:
+        raise ValueError("Room is already full")
+    
+    user = User.objects.get(id=user_id)
+    
+    if room.player1 and room.player1.id == user_id:
+        raise ValueError("You are already in this room")
+    
+    room.player2 = user
+    room.status = "playing"
+    room.save()
+    
+    return room

@@ -10,13 +10,17 @@
 <body>
     <div class="container">
         <h1>Join Room</h1>
-        <form>
+        <form action="{% url 'join_room' %}" method="POST">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="room-code">Enter Room Code:</label>
-                <input type="text" id="room-code" name="room-code" placeholder="Enter room code" required>
+                <input type="text" id="room-code" name="room_code" placeholder="Enter room code" maxlength="6" required>
+                {% if errors.room_code %}
+                    <p class="error-text">{{ errors.room_code }}</p>
+                {% endif %}
             </div>
             <button type="submit" class="btn btn-join">Join Room</button>
-            <button type="button" class="btn btn-back" onclick="history.back()">Back</button>
+            <button type="button" class="btn btn-back" onclick="window.location.href='{% url 'home' %}'">Back</button>
         </form>
     </div>
 </body>
