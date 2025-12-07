@@ -13,11 +13,29 @@
 </head>
 
 <body>
+    <div
+        style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#222;color:#fff;">
+        <div>
+            {% if user %}
+            Logged in as: <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+            {% else %}
+            Not logged in
+            {% endif %}
+        </div>
+        <form action="{% url 'logout' %}" method="post" style="margin:0;">
+            {% csrf_token %}
+            <button type="submit" class="key"
+                style="background:#e74c3c;color:#fff;border:none;padding:6px 12px;cursor:pointer;">
+                Logout
+            </button>
+        </form>
+    </div>
     <div class="app" role="application" aria-label="Wordle Game">
         <header>
             <h1>Wordle — Guess a 5-Letter Word</h1>
             <div class="footer">
-                You have 6 attempts. After each attempt, the letter will be colored: green for correct position, yellow for correct letter in wrong position, gray for letter not in word.
+                You have 6 attempts. After each attempt, the letter will be colored: green for correct position, yellow
+                for correct letter in wrong position, gray for letter not in word.
             </div>
         </header>
 
@@ -34,5 +52,5 @@
 
     <div id="toast" class="toast" style="display:none"></div>
 </body>
-</html>
 
+</html>
