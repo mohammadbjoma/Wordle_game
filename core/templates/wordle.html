@@ -1,24 +1,23 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Wordle — لعبة كلمات</title>
+    <title>Wordle — Word Guessing Game</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
     <meta name="server-word" content="{% if server_word %}{{ server_word|upper }}{% endif %}">
     <script src="{% static 'js/script.js' %}" defer></script>
 </head>
 
 <body>
-    <div class="app" role="application" aria-label="Wordle Arabic-style">
+    <div class="app" role="application" aria-label="Wordle Game">
         <header>
-            <h1>لعبة Wordle — تخمين كلمة من 5 حروف</h1>
+            <h1>Wordle — Guess a 5-Letter Word</h1>
             <div class="footer">
-                لديك 6 محاولات. بعد كل محاولة سيُلوّن الحرف: أخضر مكان صحيح، أصفر
-                موجود لكن بمكان آخر، رمادي غير موجود.
+                You have 6 attempts. After each attempt, the letter will be colored: green for correct position, yellow for correct letter in wrong position, gray for letter not in word.
             </div>
         </header>
 
@@ -27,8 +26,8 @@
             <div id="keyboard" class="keyboard" aria-hidden="false"></div>
 
             <div style="display:flex;gap:12px;justify-content:center;margin-top:14px;">
-                <button id="btn-reset" class="key">إعادة</button>
-                <button id="btn-reveal" class="key">اظهر الكلمة</button>
+                <button id="btn-reset" class="key">Reset</button>
+                <button id="btn-reveal" class="key">Reveal Word</button>
             </div>
         </main>
     </div>
