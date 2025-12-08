@@ -1,4 +1,4 @@
-const MAX_ROWS = 6, COLS = 5;
+   const MAX_ROWS = 6, COLS = 5;
         const boardEl = document.getElementById("board");
         const keyboardEl = document.getElementById("keyboard");
         const toast = document.getElementById("toast");
@@ -6,27 +6,26 @@ const MAX_ROWS = 6, COLS = 5;
         function toggleShakeRow() {
     const currentRow = document.querySelectorAll(".row")[row];
     if (!currentRow) return;
+
     const tiles = currentRow.querySelectorAll(".tile");
 
     tiles.forEach(tile => {
+        const originalClass = tile.className;   // save BEFORE changing
+
         tile.classList.add("shake");
 
-        // Temporary shake effect only — do NOT override Wordle colors
-        tile.dataset.oldClass = tile.className;
-
-        tile.style.backgroundColor = "#dc2626"; // temporary red
+        tile.style.backgroundColor = "#dc2626"; 
         tile.style.border = "2px solid black";
 
         setTimeout(() => {
             tile.classList.remove("shake");
-
-            // Restore original Wordle states (correct / present / absent)
-            tile.className = tile.dataset.oldClass;
+            tile.className = originalClass;     // restore correctly
             tile.style.backgroundColor = "";
             tile.style.border = "";
         }, 500);
     });
 }
+
 
 
 
@@ -102,11 +101,15 @@ const MAX_ROWS = 6, COLS = 5;
             }
         }
 
-        async function isValidWord(word) {
-            const url = `https://random-word-api.herokuapp.com/word?length=5&number=1`;
-            try { const res = await fetch(url); return res.ok; }
-            catch { return false; }
-        }
+      async function isValidWord(word) {
+    try {
+        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        return res.ok;
+    } catch {
+        return false;
+    }
+}
+
 
         async function validatedSubmit() {
     if (col < COLS) {
