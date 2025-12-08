@@ -88,3 +88,12 @@ def logout_view(request):
     request.session.flush()
     messages.success(request, "Logged out successfully")
     return redirect("login")
+
+def create_room(request):
+    return render(request, "create_room.html")
+
+def join_room(request):
+    return render(request, "join_room.html")
+
+def single_play(request):
+    return render(request, "wordle.html")

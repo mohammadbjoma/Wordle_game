@@ -11,9 +11,9 @@
     <div class="container">
         <h1>Wordle Game</h1>
         <div class="options">
-            <button class="btn btn-create">Create a Room</button>
-            <button class="btn btn-join">Join a Room</button>
-            <button class="btn btn-single">Single Play</button>
+           <a href="{% url 'create_room' %}"></a> <button class="btn btn-create">Create a Room</button>
+           <a href="{% url 'join_room' %}"></a> <button class="btn btn-join">Join a Room</button>
+            <a href="{% url 'single_play'}"></a><button class="btn btn-single">Single Play</button>
         </div>
     </div>
 </body>
