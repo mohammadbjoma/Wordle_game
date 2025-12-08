@@ -114,6 +114,9 @@ class Room(models.Model):
         ],
         default="waiting",
     )
+    winner = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.SET_NULL, related_name="rooms_won"
+    )
     game_state = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
