@@ -1,4 +1,4 @@
-   const MAX_ROWS = 6, COLS = 5;
+const MAX_ROWS = 6, COLS = 5;
         const boardEl = document.getElementById("board");
         const keyboardEl = document.getElementById("keyboard");
         const toast = document.getElementById("toast");
@@ -10,7 +10,7 @@
     const tiles = currentRow.querySelectorAll(".tile");
 
     tiles.forEach(tile => {
-        const originalClass = tile.className;   // save BEFORE changing
+        const originalClass = tile.className;   
 
         tile.classList.add("shake");
 
@@ -19,7 +19,7 @@
 
         setTimeout(() => {
             tile.classList.remove("shake");
-            tile.className = originalClass;     // restore correctly
+            tile.className = originalClass;   
             tile.style.backgroundColor = "";
             tile.style.border = "";
         }, 500);
@@ -101,10 +101,10 @@
             }
         }
 
-      async function isValidWord(word) {
+ async function isValidWord(word) {
     try {
         const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-        return res.ok;
+        return res.ok;   
     } catch {
         return false;
     }
@@ -121,17 +121,16 @@
     const guess = grid[row].join("").toLowerCase();
     const valid = await isValidWord(guess);
 
-    // ❌ If invalid → shake + toast + EXIT (do NOT call checkGuess)
     if (!valid) {
         toastShow("Word not in dictionary!");
         toggleShakeRow();
 
     
 
-        return; // <-- IMPORTANT: STOP HERE
+        return; 
     }
 
-    // If valid → continue to coloring logic
+
  checkGuess(grid[row].join("").toUpperCase());
 }
 
@@ -202,24 +201,30 @@
             fetchNewWord();
         }
 
-        async function fetchNewWord() {
+ async function fetchNewWord() {
     try {
-        let validWord = false;
         let word = "";
-        while (!validWord) {
+        let valid = false;
+
+        while (!valid) {
+ 
             const res = await fetch("https://random-word-api.herokuapp.com/word?length=5&number=1");
             const data = await res.json();
             word = data[0].toUpperCase();
-            // Check if all letters are unique
-            const letters = new Set(word.split(''));
-            if (letters.size === word.length) validWord = true;
+
+        
+            const check = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+            valid = check.ok;  
         }
+
         ANSWER = word;
         console.log("New Answer:", ANSWER);
-    } catch {
+
+    } catch (err) {
         toastShow("Error fetching word!");
     }
 }
+
         async function initGame() {
             buildBoard(); buildKeyboard(); updateTiles(); await fetchNewWord();
         }
